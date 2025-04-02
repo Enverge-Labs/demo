@@ -263,6 +263,47 @@ def save_results_1():
 
 
 @app.cell
+def inference(model, tokenizer):
+    # First, check if CUDA is available
+    import torch
+
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+        print(f"Using GPU: {torch.cuda.get_device_name(0)}")
+    else:
+        device = torch.device("cpu")
+        print("CUDA is not available. Using CPU instead.")
+
+    # Move your model to the appropriate device
+    model = model.to(device)
+
+    # Tokenize the input string
+    input_text = "000mclogin.micloud-object-storage-xc-cos-static-web-hosting-qny.s3.us-east.cloud-object-storage.appdomain.cloud"
+    inputs = tokenizer(input_text, return_tensors="pt").to(device)
+
+    # Perform inference
+    with torch.no_grad():
+        outputs = model(**inputs)
+        logits = outputs.logits
+        predictions = torch.argmax(logits, dim=-1)
+
+    # Map prediction to label
+    predicted_label = model.config.id2label[predictions.item()]
+    print(f"Predicted label: {predicted_label}")
+    return (
+        device,
+        input_text,
+        inputs,
+        logits,
+        model,
+        outputs,
+        predicted_label,
+        predictions,
+        torch,
+    )
+
+
+@app.cell
 def _():
     import marimo as mo
     return (mo,)
