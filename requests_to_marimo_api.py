@@ -1,18 +1,12 @@
 import marimo
 
-__generated_with = "0.13.11"
+__generated_with = "0.14.7"
 app = marimo.App()
 
 
 @app.cell
 def _():
     # Welcome to the Enverge
-    return
-
-
-@app.cell
-def _():
-    ## This is a blank Marimo notebook
     return
 
 
